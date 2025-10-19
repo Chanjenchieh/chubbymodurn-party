@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>商品展示｜導購到賣貨便</title>
+  <meta name="description" content="簡單好維護的商品展示網站，點擊購買導向賣貨便下單頁。" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; }
+    .card { transition: transform .2s ease, box-shadow .2s ease; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgb(0 0 0 / 0.08); }
+    .badge { border: 1px solid rgb(0 0 0 / 0.08); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Header -->
+  <header class="bg-white sticky top-0 z-40 border-b">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
+      <div class="text-2xl font-bold tracking-tight">恰比摩登派對</div>
+      <nav class="ml-auto flex items-center gap-3">
+        <input id="searchInput" type="search" placeholder="搜尋商品…" class="w-56 md:w-72 rounded-xl border px-3 py-2 outline-none focus:ring-2 focus:ring-black/10" />
+        <select id="categorySelect" class="rounded-xl border px-3 py-2 outline-none focus:ring-2 focus:ring-black/10">
+          <option value="">全部分類</option>
+        </select>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="bg-gradient-to-b from-white to-gray-50 border-b">
+    <div class="max-w-6xl mx-auto px-4 py-10 md:py-14 grid md:grid-cols-2 items-center gap-6">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">精選商品，點一下就去<span class="whitespace-nowrap">賣貨便</span>下單</h1>
+        <p class="mt-3 text-gray-600">這是超輕量商品網站範本。你可以快速上架、搜尋、分類，並把「立即購買」導向你的賣貨便下單連結。</p>
+        <div class="mt-5 flex gap-3">
+          <a href="#products" class="rounded-xl bg-black text-white px-5 py-3 font-semibold">開始逛逛</a>
+          <a href="#howto" class="rounded-xl bg-white border px-5 py-3 font-semibold">如何維護</a>
+        </div>
+      </div>
+      <div class="md:justify-self-end">
+        <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=60" alt="Hero" class="rounded-xl">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <main id="products" class="max-w-6xl mx-auto px-4 py-10">
+    <div class="flex items-end justify-between gap-4 mb-6">
+      <h2 class="text-2xl font-bold">全部商品</h2>
+      <div class="text-sm text-gray-500" id="countInfo"></div>
+    </div>
+
+    <div id="productGrid" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
+  </main>
+
+  <!-- How-To -->
+  <section id="howto" class="bg-white border-t">
+    <div class="max-w-6xl mx-auto px-4 py-10">
+      <h3 class="text-xl font-bold">如何維護（無後端、全部在這一檔）</h3>
+      <ol class="mt-3 space-y-2 text-gray-700 list-decimal pl-5">
+        <li>把這個 <code>index.html</code> 放到任一靜態空間（Netlify、Vercel、GitHub Pages、Cloudflare Pages）。</li>
+        <li>到下方 <strong>商品資料</strong> 區塊，依樣增改：名稱、售價、分類、圖片網址。</li>
+        <li>將 <code>buyUrl</code> 換成你的「賣貨便商品下單連結」。
+          <ul class="list-disc pl-5 mt-1">
+            <li>每個商品一個專屬連結，點擊「立即購買」會 <em>在新分頁</em> 開啟。</li>
+          </ul>
+        </li>
+        <li>可用右上角搜尋與分類快速找到商品（模糊搜尋名稱與標籤）。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-gray-500">
+      © <span id="year"></span> 你的品牌名稱．本網站為展示用途，購買流程由賣貨便完成。
+    </div>
+  </footer>
+
+  <!-- ===== 商品資料（請在此維護） ===== -->
+  <script>
+    const PRODUCTS = [];// 先不上架任何商品，頁面會顯示『敬請期待』
+// 想看排版預覽：網址後加 #demo 會載入下方示範商品
+const DEMO_PRODUCTS = [
+  {
+    id: "p001",
+    name: "生日派對氣球組",
+    price: 299,
+    category: "派對用品",
+    tags: ["氣球", "生日"],
+    img: "https://images.unsplash.com/photo-1541280910158-c4e14f9c44ba?auto=format&fit=crop&w=900&q=60",
+    buyUrl: "https://example.com/demo-1"
+  },
+  {
+    id: "p002",
+    name: "金色拉花彩帶",
+    price: 150,
+    category: "裝飾",
+    tags: ["拉花", "彩帶"],
+    img: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=900&q=60",
+    buyUrl: "https://example.com/demo-2"
+  },
+  {
+    id: "p003",
+    name: "派對餐具套組(20入)",
+    price: 220,
+    category: "餐具",
+    tags: ["紙盤", "紙杯", "環保"],
+    img: "https://images.unsplash.com/photo-1579613832125-5d34a13ffe8f?auto=format&fit=crop&w=900&q=60",
+    buyUrl: "https://example.com/demo-3"
+  }
+];
+  </script>
+
+  <!-- ===== 主程式（渲染、搜尋、分類） ===== -->
+  <script>
+    const $grid = document.getElementById('productGrid');
+    const $search = document.getElementById('searchInput');
+    const $category = document.getElementById('categorySelect');
+    const $count = document.getElementById('countInfo');
+
+    const currency = (n) => new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', maximumFractionDigits: 0 }).format(n);
+
+    const getData = () => (PRODUCTS.length ? PRODUCTS : (location.hash === '#demo' ? DEMO_PRODUCTS : []));
+
+    function uniq(arr) { return [...new Set(arr)]; }
+
+    function renderCategories() {
+      const data = getData();
+      const cats = uniq(data.map(p => p.category).filter(Boolean));
+      // 清空舊選項（保留『全部分類』）
+      [...$category.querySelectorAll('option')].forEach((opt, i) => { if (i>0) opt.remove(); });
+      for (const c of cats) {
+        const opt = document.createElement('option');
+        opt.value = c; opt.textContent = c; $category.appendChild(opt);
+      }
+    }
+
+    function productCard(p) {
+      const tags = (p.tags||[]).map(t => `<span class="badge text-xs rounded-full px-2 py-1">${t}</span>`).join(" ");
+      return `
+        <article class="card bg-white rounded-2xl overflow-hidden ring-1 ring-black/5">
+          <div class="aspect-[4/3] bg-gray-100 overflow-hidden">
+            <img loading="lazy" src="${p.img}" alt="${p.name}" class="w-full h-full object-cover">
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-semibold leading-tight">${p.name}</h3>
+              <div class="font-bold">${currency(p.price)}</div>
+            </div>
+            <div class="flex flex-wrap gap-2">${tags}</div>
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+              <span class="inline-flex items-center">分類：</span>
+              <span class="rounded-full bg-gray-100 px-2 py-0.5">${p.category || '未分類'}</span>
+            </div>
+            <a href="${p.buyUrl}" target="_blank" rel="noopener" class="block text-center rounded-xl bg-black text-white px-4 py-2 font-semibold">立即購買</a>
+          </div>
+        </article>`;
+    }
+
+    function renderEmptyState() {
+      $grid.innerHTML = `
+        <div class="col-span-full">
+          <div class="bg-white rounded-2xl p-10 text-center ring-1 ring-black/5">
+            <div class="text-lg font-semibold">尚未上架商品，敬請期待</div>
+            <p class="mt-2 text-gray-600">你可以先把網站部署起來，之後再回來填入商品。<br>想預覽版面可在網址後加上 <code>#demo</code> 再重新載入。</p>
+          </div>
+        </div>`;
+    }
+
+    function filterProducts() {
+      const data = getData();
+      const q = ($search.value||'').trim().toLowerCase();
+      const c = $category.value;
+      let list = data;
+      if (c) list = list.filter(p => p.category === c);
+      if (q) list = list.filter(p => (p.name + ' ' + (p.tags||[]).join(' ')).toLowerCase().includes(q));
+
+      if (!list.length) {
+        renderEmptyState();
+        $count.textContent = data.length ? `共 0 項（全部 ${data.length}）` : '目前尚未上架';
+        return;
+      }
+
+      $grid.innerHTML = list.map(productCard).join('');
+      $count.textContent = `共 ${list.length} 項（全部 ${data.length}）`;
+    }
+
+    // events
+    $search.addEventListener('input', filterProducts);
+    $category.addEventListener('change', filterProducts);
+    window.addEventListener('hashchange', () => { renderCategories(); filterProducts(); });
+
+    // init
+    renderCategories();
+    filterProducts();
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
